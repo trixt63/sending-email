@@ -1,6 +1,8 @@
 import os
 from dotenv import load_dotenv
 from markdown import markdown
+import time
+from datetime import datetime
 
 # Import smtplib for the actual sending function
 import smtplib
@@ -18,35 +20,13 @@ password = os.getenv('GMAIL_PASSWORD')
 sender = os.getenv('GMAIL_ADDRESS')
 
 
-def send_gmail(recipient):
-    # Create mail
-    textfile = './textfile.txt'
+def send_mail(recipient):
+    # Get current time
+    current_time_string = datetime.now().strftime('%H:%M:%S')
 
-    with open(textfile, 'rb') as fp:
-        msg = EmailMessage()
-        content = fp.read()
-        msg.set_content(content, 'text', 'plain')
-
-    msg['Subject'] = "Simple text mail"
-    msg['From'] = sender
-    msg['To'] = recipient 
-
-    # Setup the server
-    s = smtplib.SMTP("smtp.gmail.com", 587)
-    context = ssl.create_default_context()
-    # start TLS for security
-    s.starttls(context=context)
-    # Authentication
-    s.login(sender, password)
-    # Send
-    s.send_message(msg=msg)
-    s.quit()
-
-
-def send_fancy_mail(recipient):
     # Setup the msg object
     msg = MIMEMultipart('alternative')
-    msg['Subject'] = 'Formatted mail'
+    msg['Subject'] = 'Mail ' + current_time_string
     msg['From'] = sender
     msg['To'] = recipient
 
@@ -64,7 +44,6 @@ def send_fancy_mail(recipient):
 
     msg.attach(part1)
     msg.attach(part2)
-    print(msg)
 
     # Setup the server
     s = smtplib.SMTP("smtp.gmail.com", 587)
@@ -77,3 +56,11 @@ def send_fancy_mail(recipient):
     s.send_message(msg=msg)
     s.quit()
 
+
+def send_batch_mails(emails_list):
+    for email in emails_list:
+        try:
+            send_mail(email)
+            print(f"{email} sent")
+        except Exception as ex:
+            print(f"Can't send to {email}:\n{ex}")

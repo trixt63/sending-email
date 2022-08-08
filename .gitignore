@@ -77,3 +77,7 @@ app/services/artifacts/secret/*
 test/
 
 cached_data.db
+
+#custom
+fake_mails.txt
+real_mails.txt
