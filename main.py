@@ -6,7 +6,6 @@ def open_textfile(path):
     with open(path, 'r') as f:
         lines = f.readlines()
     for i, line in enumerate(lines):
-        # lines[i]= line.strip('\n')
         lines[i]= line.rstrip()
     lines = list(set(lines))
     return lines
@@ -15,12 +14,12 @@ def open_textfile(path):
 def generate_aliases(address):
     at_position = address.rfind('@')
     aliases_list = list()
-    # for i in range(97, 123):
-    for i in range(97, 122):
+    characters_range = 26
+    for i in range(97, 97+characters_range):
         new_aliases = address[:at_position] + '+' + chr(i) + address[at_position:]
-        new_aliases_2 = address[:at_position] + '+' + chr(i) + chr(i+1) + address[at_position:]
         aliases_list.append(new_aliases)
-        aliases_list.append(new_aliases_2)
+        # new_aliases_2 = address[:at_position] + '+' + chr(i) + chr(i+1) + address[at_position:]
+        # aliases_list.append(new_aliases_2)
     return aliases_list
 
 
