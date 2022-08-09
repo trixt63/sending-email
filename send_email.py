@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
 from markdown import markdown
-import time
 from datetime import datetime
 
 import smtplib
@@ -14,8 +13,8 @@ from email.mime.multipart import MIMEMultipart
 load_dotenv()
 HOST = os.getenv('HOST')
 PORT = os.getenv('PORT')
-password = os.getenv('GMAIL_PASSWORD')
-sender = os.getenv('GMAIL_ADDRESS')
+password = os.getenv('EMAIL_PASSWORD')
+sender = os.getenv('EMAIL_ADDRESS')
 
 
 def send_test_mail(recipients):
@@ -49,7 +48,7 @@ def send_test_mail(recipients):
     msg.attach(part2)
 
     # Setup the server
-    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server = smtplib.SMTP(HOST, PORT)
     context = ssl.create_default_context()
     # start TLS for security
     # server.ehlo()

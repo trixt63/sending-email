@@ -31,17 +31,16 @@ def main():
     addrs_list = open_as_list(addrs_file)
 
     # Add aliases
-    addrs_list_2 = deepcopy(addrs_list)
-    for mail in addrs_list_2:
-        aliases_list = generate_aliases(mail)
-        addrs_list.extend(aliases_list)
+    # addrs_list_2 = deepcopy(addrs_list)
+    # for mail in addrs_list_2:
+    #     aliases_list = generate_aliases(mail)
+    #     addrs_list.extend(aliases_list)
 
     start_log = time.time()
     # Start sending mails
-    print(addrs_list)
     send_test_mail(addrs_list)
     end_log = time.time()
-    print(f"Sending {len(addrs_list)} emails took {(end_log - start_log):.3f} seconds")
+    print(f"Sending to {len(addrs_list)} addresses took {(end_log - start_log):.3f} seconds")
 
 
 if __name__ == '__main__':
