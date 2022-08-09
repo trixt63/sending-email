@@ -30,9 +30,12 @@ def send_test_mail(recipients):
     with open(text_file, 'r') as fp:
         text = fp.read() 
         
-    formatted_file = './formatted'
+    # formatted_file = './formatted'
+    # with open(formatted_file, 'r') as fp:
+    #     html = fp.read()
+    formatted_file = './markdown'
     with open(formatted_file, 'r') as fp:
-        html = fp.read()
+        html = markdown(fp.read())
 
     part1 = MIMEText(text, 'plain')     
     part2 = MIMEText(html, 'html')
@@ -44,9 +47,9 @@ def send_test_mail(recipients):
     server = smtplib.SMTP(MAIL_HOST, MAIL_PORT)
     context = ssl.create_default_context()
     # start TLS for security
-    # server.ehlo()
+    server.ehlo()
     server.starttls(context=context)
-    # server.ehlo()
+    server.ehlo()
     # Authentication
     server.login(MAIL_ADDRESS, MAIL_PASSWORD)
     # Sen
