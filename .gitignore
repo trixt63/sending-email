@@ -79,5 +79,4 @@ test/
 cached_data.db
 
 #custom
-fake_mails.txt
-real_mails.txt
+addresses.txt

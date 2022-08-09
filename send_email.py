@@ -4,11 +4,9 @@ from markdown import markdown
 import time
 from datetime import datetime
 
-# Import smtplib for the actual sending function
 import smtplib
 import ssl
 
-# Import the email modules we'll need
 from email.message import EmailMessage
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -20,24 +18,29 @@ password = os.getenv('GMAIL_PASSWORD')
 sender = os.getenv('GMAIL_ADDRESS')
 
 
-def send_mail(recipient):
-    # Get current time
+def send_test_mail(recipients):
+    """Send test mail to one or a list of recipients
+    Does not work for mail aliases 
+    """
+    # Get current time for the subject of the mail
     current_time_string = datetime.now().strftime('%H:%M:%S')
 
     # Setup the msg object
     msg = MIMEMultipart('alternative')
     msg['Subject'] = 'Mail ' + current_time_string
     msg['From'] = sender
-    msg['To'] = recipient
+    # msg['To'] must be str()
+    msg['To'] = ",".join(recipients) if isinstance(recipients, list) \
+    else recipients
 
     # Create content for the message
-    textfile = './textfile.txt'
-    with open(textfile, 'r') as fp:
+    text_file = './textfile.txt'
+    with open(text_file, 'r') as fp:
         text = fp.read() 
         
-    formatted_file = './Notes for using Linux.md'
+    formatted_file = './formatted.html'
     with open(formatted_file, 'r') as fp:
-        html = markdown(fp.read())
+        html = fp.read()
 
     part1 = MIMEText(text, 'plain')     
     part2 = MIMEText(html, 'html')
@@ -46,21 +49,26 @@ def send_mail(recipient):
     msg.attach(part2)
 
     # Setup the server
-    s = smtplib.SMTP("smtp.gmail.com", 587)
+    server = smtplib.SMTP("smtp.gmail.com", 587)
     context = ssl.create_default_context()
     # start TLS for security
-    s.starttls(context=context)
+    # server.ehlo()
+    server.starttls(context=context)
+    # server.ehlo()
     # Authentication
-    s.login(sender, password)
+    server.login(sender, password)
     # Send
-    s.send_message(msg=msg)
-    s.quit()
+    # server.send_message(msg=msg)
+    server.sendmail(msg['From'], recipients, msg.as_string())
+    server.quit()
 
 
-def send_batch_mails(emails_list):
+def send_batch_test_mail(emails_list):
+    """Works for aliases, but slow
+    """
     for email in emails_list:
         try:
-            send_mail(email)
+            send_test_mail(email)
             print(f"{email} sent")
         except Exception as ex:
             print(f"Can't send to {email}:\n{ex}")

@@ -1,8 +1,9 @@
-from send_email import send_batch_mails
+from send_email import send_batch_test_mail, send_test_mail
 import time
 from copy import deepcopy
 
-def open_textfile(path):
+
+def open_as_list(path):
     with open(path, 'r') as f:
         lines = f.readlines()
     for i, line in enumerate(lines):
@@ -12,9 +13,11 @@ def open_textfile(path):
 
 
 def generate_aliases(address):
+    """Input an address, return a list of aliaes
+    """
     at_position = address.rfind('@')
     aliases_list = list()
-    characters_range = 26
+    characters_range = 2 
     for i in range(97, 97+characters_range):
         new_aliases = address[:at_position] + '+' + chr(i) + address[at_position:]
         aliases_list.append(new_aliases)
@@ -24,16 +27,21 @@ def generate_aliases(address):
 
 
 def main():
-    mails_file = './real_mails.txt'
-    mails_list = open_textfile(mails_file)
-    mails_list_2 = deepcopy(mails_list)
-    for mail in mails_list_2:
+    addrs_file = './addresses.txt'
+    addrs_list = open_as_list(addrs_file)
+
+    # Add aliases
+    addrs_list_2 = deepcopy(addrs_list)
+    for mail in addrs_list_2:
         aliases_list = generate_aliases(mail)
-        mails_list.extend(aliases_list)
+        addrs_list.extend(aliases_list)
+
     start_log = time.time()
-    send_batch_mails(mails_list)
+    # Start sending mails
+    print(addrs_list)
+    send_test_mail(addrs_list)
     end_log = time.time()
-    print(f"Sending {len(mails_list)} emails took {(end_log - start_log):.3f} seconds")
+    print(f"Sending {len(addrs_list)} emails took {(end_log - start_log):.3f} seconds")
 
 
 if __name__ == '__main__':
