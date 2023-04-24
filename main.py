@@ -38,7 +38,8 @@ def main():
 
     start_log = time.time()
     # Start sending mails
-    send_test_mail(addrs_list)
+    # send_test_mail(addrs_list)
+    send_batch_test_mail(addrs_list)
     end_log = time.time()
     print(f"Sending to {len(addrs_list)} addresses took {(end_log - start_log):.3f} seconds")
 
